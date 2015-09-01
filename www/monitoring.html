@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Buendia Control Panel</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/theme.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body role="document">
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Peak Management</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="addcontent.html">Add Content</a></li>
+                <li><a href="monitoring.html">Monitoring</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Other <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Option 1...</li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container theme-showcase" role="main">
+    <div class="page-header">
+        <h1>Nodes</h1>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#">Overview</a></li>
+            <li role="presentation"><a href="#">Offline</a></li>
+        </ul>
+    </div>
+
+<div class="page-header">
+    <div class="col-sm-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item active">
+                OpenMRS-1   <span class="server_actions">
+                <button type="button" class="btn btn-xs btn-default">Graphs</button>
+                <button type="button" class="btn btn-xs btn-warning">Restart</button>
+                <button type="button" class="btn btn-xs btn-danger">Shut down</button>
+                <button type="button" class="btn btn-xs btn-success">Online</button>
+            </span>
+            </a>
+            <a href="#" class="list-group-item">Host: omrs-master.local</a>
+            <a href="#" class="list-group-item">Failover state: <span class="label label-info">Master</span>
+                <button type="button" class="btn btn-xs btn-default">Make Slave</button> </a>
+            <a href="#" class="list-group-item">IPv4: 192.168.2.19</a>
+            <a href="#" class="list-group-item">MAC: AKGKG-RKKR-3J3K-RO4K-4GA4</a>
+            <a href="#" class="list-group-item">Server Load: max 91%, avg 41%</a>
+            <a href="#" class="list-group-item">Memory Usage: max 600MB(8%), avg 420MB(6%)</a>
+            <a href="#" class="list-group-item">Uptime: 3d4h3m</a>
+            <a href="#" class="list-group-item">Disk Full: 50%</a>
+            <a href="#" class="list-group-item">Issues: USB Port Failure</a>
+            <a href="#" class="list-group-item">Last Report: 3 minutes ago</a>
+        </div>
+    </div><!-- /.col-sm-4 -->
+    <div class="col-sm-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item active">
+                OpenMRS-2   <span class="server_actions">
+                <button type="button" class="btn btn-xs btn-default">Graphs</button>
+                <button type="button" class="btn btn-xs btn-warning">Restart</button>
+                <button type="button" class="btn btn-xs btn-danger">Shut down</button>
+                <button type="button" class="btn btn-xs btn-success">Online</button>
+            </span>
+            </a>
+            <a href="#" class="list-group-item">Host: omrs-slave1.local</a>
+            <a href="#" class="list-group-item">Failover state: <span class="label label-info">Slave</span>
+                <button type="button" class="btn btn-xs btn-default">Make Master</button> </a>
+            <a href="#" class="list-group-item">IPv4: 192.168.2.20</a>
+            <a href="#" class="list-group-item">MAC: AKGKG-RKKR-3J3K-RO4K-4GA4</a>
+            <a href="#" class="list-group-item">Server Load: max 91%, avg 41%</a>
+            <a href="#" class="list-group-item">Memory Usage: max 600MB(8%), avg 420MB(6%)</a>
+            <a href="#" class="list-group-item">Uptime: 3d4h3m</a>
+            <a href="#" class="list-group-item">Disk Full: 50%</a>
+            <a href="#" class="list-group-item">Issues: None</a>
+            <a href="#" class="list-group-item">Last Report: 3 minutes ago</a>
+        </div>
+    </div><!-- /.col-sm-4 -->
+    <div class="col-sm-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item active">
+                OpenMRS-3   <span class="server_actions">
+                <button type="button" class="btn btn-xs btn-default">Graphs</button>
+                <button type="button" class="btn btn-xs btn-warning">Restart</button>
+                <button type="button" class="btn btn-xs btn-danger">Shut down</button>
+                <button type="button" class="btn btn-xs btn-success">Online</button>
+            </span>
+            </a>
+            <a href="#" class="list-group-item">Host: omrs-slave2.local</a>
+            <a href="#" class="list-group-item">Failover state: <span class="label label-info">Slave</span>
+                <button type="button" class="btn btn-xs btn-default">Make Master</button> </a>
+            <a href="#" class="list-group-item">IPv4: 192.168.2.21</a>
+            <a href="#" class="list-group-item">MAC: AKGKG-RKKR-3J3K-RO4K-4GA4</a>
+            <a href="#" class="list-group-item">Server Load: max 91%, avg 41%</a>
+            <a href="#" class="list-group-item">Memory Usage: max 600MB(8%), avg 420MB(6%)</a>
+            <a href="#" class="list-group-item">Uptime: 3d4h3m</a>
+            <a href="#" class="list-group-item">Disk Full: 50%</a>
+            <a href="#" class="list-group-item">Issues: None</a>
+            <a href="#" class="list-group-item">Last Report: 3 minutes ago</a>
+        </div>
+    </div><!-- /.col-sm-4 -->
+
+</div>
+
+
+
+
+
+
+
+
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/docs.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
