@@ -3,13 +3,40 @@
 	WS.curation.videoOverview = {
 
 		init: function(){
-			this._$el = $('[data-video-overview]');
+			this._$overviewEl = $('[data-video-overview]');
+			this._$navEl = $('[data-video-overview-nav]');
 			this._currOffset = 0;
+
+			this._categoryId = this._checkCategory();
 
 			this._bindEvents();
 
 			this._initItemTemplate();
 			this._getNextVideos();
+
+			this._initNav();
+		},
+
+		_checkCategory: function(){
+			var categoryName = WS.curation.utils.getParameterByName('categoryName') || 'All',
+				categoryId = WS.curation.utils.getParameterByName('categoryId');
+
+			$('[data-video-overview-category-name]').text(categoryName);
+
+			return categoryId;
+		},
+
+		_initNav: function(){
+			var $el = this._$navEl;
+
+			WS.curation.req.get('https://peakapi.whitespell.com/categories')
+			.done(function(categories){
+				categories.forEach(function(details){
+					$el.append('<li><a href="?categoryName='+details.categoryName+
+						'&categoryId='+details.categoryId+'">'+
+						details.categoryName+'</a></li>');
+				});
+			});
 		},
 
 		_bindEvents: function(){
@@ -97,7 +124,7 @@
 			var parseItems = function(items){
 				items.forEach(function(itemDetails){
 					var html = self._itemParser(itemDetails);
-					self._$el.append(html);
+					self._$overviewEl.append(html);
 				});
 			};
 
@@ -107,6 +134,10 @@
 
 			if(offset > 0){
 				reqOptions.offset = offset;
+			}
+
+			if(this._categoryId){
+				reqOptions.categoryId = this._categoryId;
 			}
 
 			WS.curation.req.get('https://peakapi.whitespell.com/content', reqOptions)
