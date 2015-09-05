@@ -3,8 +3,28 @@
 	WS.curation.videoOverview = {
 
 		init: function(){
+			this._$el = $('[video-overview]');
+			this._currOffset = 0;
+
+			this._bindEvents();
+
 			this._initItemTemplate();
-			this._populateOverview($('[video-overview]'));
+			this._getNextVideos();
+		},
+
+		_bindEvents: function(){
+			var self = this,
+				$window = $(window),
+				$document = $(document);
+
+			//inf scroll
+			$window.scroll(function(){
+				if($window.scrollTop() + $window.height() > $document.height() - 100) {
+					if(!self._reqInProgress){
+						self._getNextVideos();
+					}
+				}
+			});
 		},
 
 		_initItemTemplate: function(){
@@ -12,29 +32,47 @@
 			this._itemParser = Handlebars.compile($videoItemTemplate);
 		},
 
-		_populateOverview: function($overviewEl){
+		_getNextVideos: function(){
 			var self = this;
+			
+			this._reqInProgress = true;
+
+			this._populateOverview(20, this._currOffset)
+			.done(function(){
+				self._currOffset += 20;
+			})
+			.always(function(){
+				self._reqInProgress = false;
+			});
+		},
+
+		_populateOverview: function(limit, offset){
+			var self = this,
+				dfd = jQuery.Deferred();
 
 			var parseItems = function(items){
 				items.forEach(function(itemDetails){
 					var html = self._itemParser(itemDetails);
-					$overviewEl.append(html);
+					self._$el.append(html);
 				});
 			};
 
-			var res = [{
-				title: 'ok',
-				body: 'hi'
-			},{
-				title: 'ok2',
-				body: 'hi2'
-			}];
-			parseItems(res);
+			var reqOptions = {
+				limit: limit
+			};
 
-			WS.curation.req.get('https://peakapi.whitespell.com/content')
+			if(offset > 0){
+				reqOptions.offset = offset;
+			}
+
+			WS.curation.req.get('https://peakapi.whitespell.com/content', reqOptions)
 			.done(function(res){
-				console.log(res);
-			});
+				parseItems(res);
+				dfd.resolve(res);
+			})
+			.fail(dfd.reject);
+
+			return dfd;
 		}
 
 	};

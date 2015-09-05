@@ -33,10 +33,11 @@
 			});
 		},
 
-		get: function(url){
+		get: function(url, data){
 			return this._base({
 				type: 'GET',
-				url: url
+				url: url,
+				data: data
 			});
 		}
 
