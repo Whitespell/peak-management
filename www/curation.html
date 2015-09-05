@@ -66,19 +66,35 @@
 <div class="container theme-showcase" role="main">
 
 
-    <div class="alert alert-info hidden" role="alert" id="js-main-notification"></div>
-    <div video-overview></div>
+    <div class="alert alert-info hidden alert-dismissible" role="alert" id="js-main-notification">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="js-main-notification__content"></span>
+    </div>
+    <div data-video-overview></div>
 
     <script id="js-video-item-template" type="text/x-handlebars-template">
-        <div class="media">
+        <div class="media" data-video-overview-item="{{ contentId }}">
             <div class="media-left media-middle">
                 <a href="#">
                     <img class="media-object" src="{{ thumbnailUrl }}" />
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading">{{ contentTitle }}</h4>
-                {{ contentDescription }}
+                <div>
+                    <h4 class="media-heading">{{ contentTitle }}</h4>
+                    {{ contentDescription }}
+                </div>
+                <div class="padding">
+                    <button type="button" class="btn btn-success"
+                    data-video-overview-item-action="approve">
+                    Approve
+                    </button>
+                    <button type="button" class="btn btn-danger"
+                    data-video-overview-item-action="decline">
+                    Decline
+                    </button>
+                </div>
+                <div class="bg-danger js-video-overview-item-res-msg"></div>
             </div>
         </div>
     </script>

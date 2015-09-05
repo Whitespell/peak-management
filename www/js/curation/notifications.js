@@ -3,7 +3,7 @@
 	WS.curation.notifications = {
 
 		init: function(){
-			this.$_notificationEl = $('#js-main-notification');
+			this.$_notificationEl = $('#js-main-notification').find('.js-main-notification__content');
 		},
 
 		show: function(msg){

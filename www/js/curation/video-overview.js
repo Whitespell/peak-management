@@ -3,7 +3,7 @@
 	WS.curation.videoOverview = {
 
 		init: function(){
-			this._$el = $('[video-overview]');
+			this._$el = $('[data-video-overview]');
 			this._currOffset = 0;
 
 			this._bindEvents();
@@ -20,11 +20,55 @@
 			//inf scroll
 			$window.scroll(function(){
 				if($window.scrollTop() + $window.height() > $document.height() - 100) {
-					if(!self._reqInProgress){
+					if(!self._infScrollReqInProgress){
 						self._getNextVideos();
 					}
 				}
 			});
+
+			$('body').click(this._handleBodyClick.bind(this));
+		},
+
+		_handleBodyClick: function(e){
+			var $target = $(e.target);
+			if($target.data('video-overview-item-action')) this._handleItemAction($target);
+		},
+
+		_handleItemAction: function($el){
+			var self = this,
+				action = $el.data('video-overview-item-action'),
+				$item = $el.closest('[data-video-overview-item]'),
+				itemId = $item.data('video-overview-item'),
+				$resMsgEl = $item.find('.js-video-overview-item-res-msg');
+
+			if(this._itemActionReqInProgress === true){
+				$resMsgEl.text('There is already a request in progress.');
+				return;
+			}
+
+			//TODO:
+			//something with a request and content status change based
+			//on the itemId and the action (approve or decline)
+			console.log(action, itemId);
+
+			this._itemActionReqInProgress = true;
+
+			//fake request
+			setTimeout(function(){
+				var resSuccessFull = true;
+
+				if(resSuccessFull){
+					//on success
+					//remove item from DOM as we are done with it
+					$item.remove();
+				} else {
+					//on error
+					$resMsgEl.text('An error occured.');
+				}
+
+				//always
+				self._itemActionReqInProgress = false;
+			}, 1000);
 		},
 
 		_initItemTemplate: function(){
@@ -35,14 +79,14 @@
 		_getNextVideos: function(){
 			var self = this;
 			
-			this._reqInProgress = true;
+			this._infScrollReqInProgress = true;
 
 			this._populateOverview(20, this._currOffset)
 			.done(function(){
 				self._currOffset += 20;
 			})
 			.always(function(){
-				self._reqInProgress = false;
+				self._infScrollReqInProgress = false;
 			});
 		},
 
