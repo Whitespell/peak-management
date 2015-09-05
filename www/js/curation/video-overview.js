@@ -6,14 +6,13 @@
 			this._$overviewEl = $('[data-video-overview]');
 			this._$navEl = $('[data-video-overview-nav]');
 			this._currOffset = 0;
+			this._videos = {};
 
 			this._categoryId = this._checkCategory();
 
 			this._bindEvents();
-
 			this._initItemTemplate();
 			this._getNextVideos();
-
 			this._initNav();
 		},
 
@@ -73,29 +72,32 @@
 				return;
 			}
 
-			//TODO:
-			//something with a request and content status change based
-			//on the itemId and the action (approve or decline)
-			console.log(action, itemId);
-
 			this._itemActionReqInProgress = true;
+			$resMsgEl.text('Processing...');
 
-			//fake request
-			setTimeout(function(){
-				var resSuccessFull = true;
+			var videoDetails = this._videos[itemId];
+			videoDetails.status = action;
 
-				if(resSuccessFull){
-					//on success
-					//remove item from DOM as we are done with it
-					$item.remove();
-				} else {
-					//on error
-					$resMsgEl.text('An error occured.');
-				}
+			var reqPromise;
+			if(action === 'approve'){
+				reqPromise = WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/content', videoDetails);
+			} else if(action === 'decline'){
+				reqPromise = WS.curation.req.delete('https://peakapi.whitespell.com/content/'+videoDetails.contentId);
+			} else {
+				return;
+			}
 
-				//always
+			reqPromise
+			.done(function(res){
+				$item.remove();
+			})
+			.fail(function(res){
+				res = res.responseJSON;
+				$resMsgEl.html('<b>An error occured.</b><br>'+res.httpStatusCode+', '+res.errorMessage);
+			})
+			.always(function(){
 				self._itemActionReqInProgress = false;
-			}, 1000);
+			});
 		},
 
 		_initItemTemplate: function(){
@@ -143,6 +145,11 @@
 			WS.curation.req.get('https://peakapi.whitespell.com/content', reqOptions)
 			.done(function(res){
 				parseItems(res);
+
+				res.forEach(function(details){
+					self._videos[details.contentId] = details;
+				});
+
 				dfd.resolve(res);
 			})
 			.fail(dfd.reject);
