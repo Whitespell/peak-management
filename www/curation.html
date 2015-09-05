@@ -46,9 +46,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Home</a></li>
                 <li><a href="addcontent.html">Add Content</a></li>
-                <li><a href="curation.html">Curation</a></li>
+                <li class="active"><a href="curation.html">Curation</a></li>
                 <li><a href="monitoring.html">Monitoring</a></li>
 
                 <li class="dropdown">
@@ -65,39 +65,25 @@
 
 <div class="container theme-showcase" role="main">
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <h3>Add Content</h3>
 
-    Content Title:
-    <input type="text" name="content_name"/>
+    <div class="alert alert-info hidden" role="alert" id="js-main-notification"></div>
+    <div video-overview>
+        
+    </div>
 
-    Content Type
-    <select type="text" name="content_type">
-    </select>
-
-    Content Category
-    <select type="text" name="content_type">
-    </select>
-
-    Content URL
-    <input type="text" name="content_url" id="content_url"/>
-
-    Content Description
-    <input type="text" name="content_description" id="content_description"/>
-
-
-    <p><a href="#" class="btn btn-primary btn-lg" role="button" id="addContent">Add Content &raquo;</a></p>
-    <textarea id="response_addContent" style="width:100%;height:400px;">Response will load here after your request</textarea>
-</div>
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <h3>Add Content Type</h3>
-    Content Type Name:
-    <input type="text" name="content_name"/>
-    <p><a href="#" class="btn btn-primary btn-lg" role="button" id="addContentType">Add Content Type &raquo;</a></p>
-    <textarea id="response_addContentType" style="width:100%;height:400px;">All content types will load here after you finish your request.</textarea>
-</div>
+    <script id="js-video-item-template" type="text/x-handlebars-template">
+        <div class="media">
+            <div class="media-left media-middle">
+                <a href="#">
+                    <img class="media-object" src="{{ thumbnailUrl }}" />
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{ contentTitle }}</h4>
+                {{ contentDescription }}
+            </div>
+        </div>
+    </script>
 
 </div> <!-- /container -->
 
@@ -108,6 +94,21 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/docs.min.js"></script>
+
+<script src="js/handlebars-v4.0.2.js"></script>
+
+
+<!-- services -->
+<script src="js/curation/req.js"></script>
+<script src="js/curation/auth.js"></script>
+
+<!-- modules -->
+<script src="js/curation/notifications.js"></script>
+<script src="js/curation/video-overview.js"></script>
+
+<!-- global init -->
+<script src="js/curation/init.js"></script>
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 </body>
