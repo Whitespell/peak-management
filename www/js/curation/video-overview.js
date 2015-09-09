@@ -85,8 +85,6 @@
 				return;
 			}
 
-			console.log(videoDetails);
-
 			WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/contentcurated', videoDetails)
 			.done(function(res){
 				$item.remove();
