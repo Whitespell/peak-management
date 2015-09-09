@@ -76,18 +76,16 @@
 			$resMsgEl.text('Processing...');
 
 			var videoDetails = this._videos[itemId];
-			videoDetails.status = action;
 
-			var reqPromise;
 			if(action === 'approve'){
-				reqPromise = WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/content', videoDetails);
+				videoDetails.curationAccepted = 1;
 			} else if(action === 'decline'){
-				reqPromise = WS.curation.req.delete('https://peakapi.whitespell.com/content/'+videoDetails.contentId);
+				videoDetails.curationAccepted = -1;
 			} else {
 				return;
 			}
 
-			reqPromise
+			WS.curation.req.post('https://peakapi.whitespell.com/contentcurated', videoDetails)
 			.done(function(res){
 				$item.remove();
 			})
@@ -131,6 +129,7 @@
 			};
 
 			var reqOptions = {
+				notCurated: 1,
 				limit: limit
 			};
 
