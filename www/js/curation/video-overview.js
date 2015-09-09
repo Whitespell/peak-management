@@ -78,14 +78,16 @@
 			var videoDetails = this._videos[itemId];
 
 			if(action === 'approve'){
-				videoDetails.curationAccepted = 1;
+				videoDetails.accepted = 1;
 			} else if(action === 'decline'){
-				videoDetails.curationAccepted = -1;
+				videoDetails.accepted = -1;
 			} else {
 				return;
 			}
 
-			WS.curation.req.post('https://peakapi.whitespell.com/contentcurated', videoDetails)
+			console.log(videoDetails);
+
+			WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/contentcurated', videoDetails)
 			.done(function(res){
 				$item.remove();
 			})
