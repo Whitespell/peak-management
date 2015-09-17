@@ -22,6 +22,8 @@
 			//merge options into defaults
 			$.extend(defaults, options);
 
+			console.log('REQ', defaults);
+
 			return $.ajax(defaults);
 		},
 
@@ -45,7 +47,7 @@
 			return this._base({
 				type: 'DELETE',
 				url: url,
-				data: data
+				data: typeof data === 'object' ? JSON.stringify(data) : data
 			});
 		}
 

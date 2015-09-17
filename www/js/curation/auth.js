@@ -10,13 +10,14 @@
 			this._userObj = userObj;
 		},
 
-		authenticate: function(username){
+		authenticate: function(username, password){
 			var self = this,
 				dfd = jQuery.Deferred();
 
 			WS.curation.req.post('https://peakapi.whitespell.com/authentication',
-				'{"userName":"'+username+'","password":"123123123","device":"DEVICE_INFO", "mac_address":"MAC_ADDRESS","geolocation":"LOCATION_INFO"}')
+				'{"userName":"'+username+'","password":"'+password+'","device":"DEVICE_INFO", "mac_address":"MAC_ADDRESS","geolocation":"LOCATION_INFO"}')
 			.done(function(res){
+				console.log('GOT AUTHENTICATED');
 				self._setUser(res);
 				dfd.resolve(res);
 			})

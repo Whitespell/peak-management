@@ -20,7 +20,7 @@
 		},
 
 		_checkCategory: function(){
-			var categoryName = WS.curation.utils.getParameterByName('categoryName') || 'Fitness',
+			var categoryName = WS.curation.utils.getParameterByName('categoryName') || 'fitness',
 				categoryId = WS.curation.utils.getParameterByName('categoryId');
 
 			$('[data-video-overview-category-name]').text(categoryName);
@@ -75,7 +75,7 @@
 				self._itemActionReqInProgress = true;
 				$resMsgEl.text('Processing...');
 
-				WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/contentcurated', videoDetails)
+				WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/content', videoDetails)
 				.done(function(res){
 					$item.remove();
 				})
@@ -96,11 +96,8 @@
 			if(action === 'approve'){
 
 				videoDetails.accepted = 1;
-				this._openBundlesModal()
-				.done(function(bundleName){
-					videoDetails.bundle = bundleName;
-					doReq();
-				});
+				this._openBundlesModal(itemId)
+				.done(doReq);
 			
 			} else if(action === 'decline'){
 			
@@ -120,9 +117,10 @@
 			};
 		},
 
-		_openBundlesModal: function(){
+		_openBundlesModal: function(itemId){
 			var self = this,
-				dfd = jQuery.Deferred();
+				dfd = jQuery.Deferred(),
+				selectedBundleId;
 
 			//show modal
 			this._bundlesModal.$el.modal('show');
@@ -130,10 +128,18 @@
 			//get bundles
 			this._addBundlesDropdown();
 
+			this._bundlesModal.$dropdown.on('change', function(){
+				selectedBundleId = $(this).val();
+			});
+
 			//catch save
 			this._bundlesModal.$el.find('[data-item-approve-save]').on('click', function(){
-				var bundleName = self._bundlesModal.$dropdown.find('option[selected]').text();
-				dfd.resolve(bundleName);
+				//add to bundle
+				WS.curation.req.post('https://peakapi.whitespell.com/content/'+selectedBundleId+'/add_child', {
+					childId: itemId
+				});
+
+				dfd.resolve(selectedBundleId);
 				self._bundlesModal.$el.modal('hide');
 			});
 
@@ -150,21 +156,17 @@
 				userId = WS.curation.auth.getUser().userId,
 				$dropdown = this._bundlesModal.$dropdown;
 
-			console.log(
-				'https://peakapi.whitespell.com/content/?contentType=6&userId='+userId
-				);
+			//empty options
+			$dropdown.html('');
+			$dropdown.append('<option selected>None</option>');
+
 			WS.curation.req.get('https://peakapi.whitespell.com/content/?contentType=6&userId='+userId)
 			.done(function(bundleOptions){
-				console.log(bundleOptions);
-
-				//empty options
-				$dropdown.html('');
-				
 				//loop options
-				$dropdown.append('<option selected>None</option>');
-				bundleOptions.forEach(function(bundleName){
+				console.log('GOT BUNDLES', bundleOptions);
+				bundleOptions.forEach(function(bundle){
 					//append option to dropdown
-					$dropdown.append('<option>'+bundleName+'</option>');
+					$dropdown.append('<option value="'+bundle.contentId+'">'+bundle.contentTitle+'</option>');
 				});
 			});
 		},
@@ -212,7 +214,7 @@
 				reqOptions.categoryId = this._categoryId;
 			}
 
-			WS.curation.req.get('https://peakapi.whitespell.com/content', reqOptions)
+			WS.curation.req.get('https://peakapi.whitespell.com/contentcurated', reqOptions)
 			.done(function(res){
 				parseItems(res);
 

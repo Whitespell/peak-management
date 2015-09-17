@@ -9,7 +9,7 @@
 				username = category ? 'peak'+category : 'peakfitness';
 
 			//init auth
-			WS.curation.auth.authenticate(username)
+			WS.curation.auth.authenticate(username, '123123123')
 			.then(function(){
 				//init modules
 				WS.curation.videoOverview.init();
