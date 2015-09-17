@@ -11,13 +11,16 @@
 			this._categoryId = this._checkCategory();
 
 			this._bindEvents();
+
+			this._initBundlesModal();
 			this._initItemTemplate();
+
 			this._getNextVideos();
 			this._initNav();
 		},
 
 		_checkCategory: function(){
-			var categoryName = WS.curation.utils.getParameterByName('categoryName') || 'All',
+			var categoryName = WS.curation.utils.getParameterByName('categoryName') || 'Fitness',
 				categoryId = WS.curation.utils.getParameterByName('categoryId');
 
 			$('[data-video-overview-category-name]').text(categoryName);
@@ -65,42 +68,110 @@
 				action = $el.data('video-overview-item-action'),
 				$item = $el.closest('[data-video-overview-item]'),
 				itemId = $item.data('video-overview-item'),
-				$resMsgEl = $item.find('.js-video-overview-item-res-msg');
+				$resMsgEl = $item.find('.js-video-overview-item-res-msg'),
+				videoDetails = this._videos[itemId];
+
+			var doReq = function(){
+				self._itemActionReqInProgress = true;
+				$resMsgEl.text('Processing...');
+
+				WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/contentcurated', videoDetails)
+				.done(function(res){
+					$item.remove();
+				})
+				.fail(function(res){
+					res = res.responseJSON;
+					$resMsgEl.html('<b>An error occured.</b><br>'+res.httpStatusCode+', '+res.errorMessage);
+				})
+				.always(function(){
+					self._itemActionReqInProgress = false;
+				});
+			};
 
 			if(this._itemActionReqInProgress === true){
 				$resMsgEl.text('There is already a request in progress.');
 				return;
 			}
 
-			this._itemActionReqInProgress = true;
-			$resMsgEl.text('Processing...');
-
-			var videoDetails = this._videos[itemId];
-
 			if(action === 'approve'){
+
 				videoDetails.accepted = 1;
+				this._openBundlesModal()
+				.done(function(bundleName){
+					videoDetails.bundle = bundleName;
+					doReq();
+				});
+			
 			} else if(action === 'decline'){
+			
 				videoDetails.accepted = -1;
+				doReq();
+			
 			} else {
 				return;
 			}
+		},
 
-			WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/contentcurated', videoDetails)
-			.done(function(res){
-				$item.remove();
-			})
-			.fail(function(res){
-				res = res.responseJSON;
-				$resMsgEl.html('<b>An error occured.</b><br>'+res.httpStatusCode+', '+res.errorMessage);
-			})
-			.always(function(){
-				self._itemActionReqInProgress = false;
+		_initBundlesModal: function(){
+			this._bundlesModal = {
+				$el: $('#bundlesModal'),
+				$modalBody: $('#bundlesModal').find('.modal-body'),
+				$dropdown: $('#bundles-dropdown')
+			};
+		},
+
+		_openBundlesModal: function(){
+			var self = this,
+				dfd = jQuery.Deferred();
+
+			//show modal
+			this._bundlesModal.$el.modal('show');
+
+			//get bundles
+			this._addBundlesDropdown();
+
+			//catch save
+			this._bundlesModal.$el.find('[data-item-approve-save]').on('click', function(){
+				var bundleName = self._bundlesModal.$dropdown.find('option[selected]').text();
+				dfd.resolve(bundleName);
+				self._bundlesModal.$el.modal('hide');
+			});
+
+			this._bundlesModal.$el.find('[data-item-approve-cancel]').on('click', function(){
+				dfd.reject();
+				self._bundlesModal.$el.modal('hide');
+			});
+
+			return dfd;
+		},
+
+		_addBundlesDropdown: function(){
+			var self = this,
+				userId = WS.curation.auth.getUser().userId,
+				$dropdown = this._bundlesModal.$dropdown;
+
+			console.log(
+				'https://peakapi.whitespell.com/content/?contentType=6&userId='+userId
+				);
+			WS.curation.req.get('https://peakapi.whitespell.com/content/?contentType=6&userId='+userId)
+			.done(function(bundleOptions){
+				console.log(bundleOptions);
+
+				//empty options
+				$dropdown.html('');
+				
+				//loop options
+				$dropdown.append('<option selected>None</option>');
+				bundleOptions.forEach(function(bundleName){
+					//append option to dropdown
+					$dropdown.append('<option>'+bundleName+'</option>');
+				});
 			});
 		},
 
 		_initItemTemplate: function(){
-			var $videoItemTemplate = $('#js-video-item-template').html();
-			this._itemParser = Handlebars.compile($videoItemTemplate);
+			var $template = $('#js-video-item-template').html();
+			this._itemParser = Handlebars.compile($template);
 		},
 
 		_getNextVideos: function(){

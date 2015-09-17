@@ -3,14 +3,18 @@
 	WS.curation.init = {
 
 		init: function(){
+			WS.curation.notifications.init();
+
+			var category = WS.curation.utils.getParameterByName('categoryName'),
+				username = category ? 'peak'+category : 'peakfitness';
+
 			//init auth
-			WS.curation.auth.init()
+			WS.curation.auth.authenticate(username)
 			.then(function(){
 				//init modules
 				WS.curation.videoOverview.init();
-				WS.curation.notifications.init();
 			},
-			function(){
+			function(res){
 				res = res.responseJSON;
 				WS.curation.notifications.show('Error '+res.errorId+' '+res.errorMessage);
 			});
