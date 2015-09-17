@@ -71,13 +71,17 @@
 				$resMsgEl = $item.find('.js-video-overview-item-res-msg'),
 				videoDetails = this._videos[itemId];
 
-			var doReq = function(){
+			console.log('VIDEOS', videoDetails);
+
+			var doReq = function(callback){
 				self._itemActionReqInProgress = true;
 				$resMsgEl.text('Processing...');
 
 				WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/content', videoDetails)
 				.done(function(res){
+					console.log('ADDED VIDEO', itemId);
 					$item.remove();
+					callback();
 				})
 				.fail(function(res){
 					res = res.responseJSON;
@@ -96,8 +100,9 @@
 			if(action === 'approve'){
 
 				videoDetails.accepted = 1;
-				this._openBundlesModal(itemId)
-				.done(doReq);
+				doReq(function(){
+					self._openBundlesModal(itemId);
+				});
 			
 			} else if(action === 'decline'){
 			
@@ -164,10 +169,21 @@
 			.done(function(bundleOptions){
 				//loop options
 				console.log('GOT BUNDLES', bundleOptions);
-				bundleOptions.forEach(function(bundle){
-					//append option to dropdown
-					$dropdown.append('<option value="'+bundle.contentId+'">'+bundle.contentTitle+'</option>');
-				});
+				self._addBundleOptionsToEl(bundleOptions, $dropdown);
+			});
+		},
+
+		_addBundleOptionsToEl: function(bundleOptions, $el, parentBundleTitle){
+			var self = this;
+			parentBundleTitle = parentBundleTitle ? parentBundleTitle+': ' : '';
+
+			bundleOptions.forEach(function(bundle){
+				//append option to dropdown
+				if(bundle.children.length > 0){
+					self._addBundleOptionsToEl(bundle.children, $el, bundle.contentTitle);
+				}
+
+				$el.append('<option value="'+bundle.contentId+'">'+parentBundleTitle+bundle.contentTitle+'</option>');
 			});
 		},
 
