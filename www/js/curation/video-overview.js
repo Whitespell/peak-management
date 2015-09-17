@@ -69,23 +69,22 @@
 				$item = $el.closest('[data-video-overview-item]'),
 				itemId = $item.data('video-overview-item'),
 				$resMsgEl = $item.find('.js-video-overview-item-res-msg'),
-				videoDetails = this._videos[itemId];
-
-			console.log('VIDEOS', videoDetails);
+				videoDetails = this._videos[itemId],
+				userId = WS.curation.auth.getUser().userId;
 
 			var doReq = function(callback){
 				self._itemActionReqInProgress = true;
 				$resMsgEl.text('Processing...');
 
-				WS.curation.req.post('https://peakapi.whitespell.com/users/'+videoDetails.userId+'/content', videoDetails)
+				WS.curation.req.post('https://peakapi.whitespell.com/users/'+userId+'/content', videoDetails)
 				.done(function(res){
-					console.log('ADDED VIDEO', itemId);
+					console.log('ADDED VIDEO', res);
 					$item.remove();
-					callback();
+					callback(res.contentId);
 				})
 				.fail(function(res){
 					res = res.responseJSON;
-					$resMsgEl.html('<b>An error occured.</b><br>'+res.httpStatusCode+', '+res.errorMessage);
+					$resMsgEl.html('<b>An error occured.</b><br>'+(res ? res.httpStatusCode+', '+res.errorMessage : ''));
 				})
 				.always(function(){
 					self._itemActionReqInProgress = false;
@@ -100,8 +99,8 @@
 			if(action === 'approve'){
 
 				videoDetails.accepted = 1;
-				doReq(function(){
-					self._openBundlesModal(itemId);
+				doReq(function(contentId){
+					self._openBundlesModal(contentId);
 				});
 			
 			} else if(action === 'decline'){
