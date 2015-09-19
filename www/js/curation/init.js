@@ -13,7 +13,7 @@
 			.then(function(){
 				//init modules
 				WS.curation.videoOverview.init();
-				WS.curation.addContent.init();
+				WS.curation.simpleForm.init();
 			},
 			function(res){
 				res = res.responseJSON;

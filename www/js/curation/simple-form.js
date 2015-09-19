@@ -1,6 +1,6 @@
 (function(WS, $){
 	
-	WS.curation.addContent = {
+	WS.curation.simpleForm = {
 
 		init: function(){
 			var $forms = $('[data-simple-form]');
