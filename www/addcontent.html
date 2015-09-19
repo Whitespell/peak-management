@@ -46,8 +46,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="addcontent.html">Add Content</a></li>
+                <li><a href="#">Home</a></li>
+                <li class="active"><a href="addcontent.html">Add Content</a></li>
                 <li><a href="curation.html">Curation</a></li>
                 <li><a href="monitoring.html">Monitoring</a></li>
 
@@ -66,38 +66,67 @@
 <div class="container theme-showcase" role="main">
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
+<form data-simple-form data-endpoint="/users/{{userId}}/content"
+      class="jumbotron">
     <h3>Add Content</h3>
 
-    Content Title:
-    <input type="text" name="content_name"/>
+    <div class="form-group">
+        <label class="control-label">Content Title:</label>
+        <input type="text" name="content_name" class="form-control" data-key="contentTitle" value="Yoga For a Healthy Liver" />
+    </div>
 
-    Content Type
-    <select type="text" name="content_type">
-    </select>
+    <div class="form-group">
+        <label class="control-label">Content Type</label>
+        <select class="js-content-types-select" type="text" name="content_type"
+        data-key="contentType"
+        data-populate-endpoint="/content/types"
+        data-option-template="<option value='{{contentTypeId}}'>{{contentTypeName}}</option>">
+        </select>
+    </div>
 
-    Content Category
-    <select type="text" name="content_type">
-    </select>
+    <div class="form-group">
+        <label class="control-label">Content Category</label>
+        <select class="js-content-categories-select" type="text" name="content_type"
+        data-key="categoryId"
+        data-populate-endpoint="/categories"
+        data-option-template="<option value='{{categoryId}}'>{{categoryName}}</option>"></select>
+    </div>
 
-    Content URL
-    <input type="text" name="content_url" id="content_url"/>
+    <div class="form-group">
+        <label class="control-label">Content URL</label>
+        <input type="text" name="content_url" id="content_url" class="form-control" data-key="contentUrl" value="https://www.youtube.com/watch?v=hlqOGPoh42s" />
+    </div>
 
-    Content Description
-    <input type="text" name="content_description" id="content_description"/>
+    <div class="form-group">
+        <label class="control-label">Content Description</label>
+        <input type="text" name="content_description" class="form-control" id="content_description" data-key="contentDescription" value="Yoga on deck! Join me for Yoga For A Healthy Liver!" />
+    </div>
 
+    <div class="form-group">
+        <label class="control-label">Thumbnail URL</label>
+        <input type="text" name="content_description" class="form-control" id="content_description" data-key="thumbnailUrl" value="https://yt3.ggpht.com/-6-7NkPxEzZY/AAAAAAAAAAI/AAAAAAAAAAA/37wERyk2F-8/s88-c-k-no/photo.jpg" />
+    </div>
 
-    <p><a href="#" class="btn btn-primary btn-lg" role="button" id="addContent">Add Content &raquo;</a></p>
-    <textarea id="response_addContent" style="width:100%;height:400px;">Response will load here after your request</textarea>
-</div>
+    <p><input type="submit" class="btn btn-primary btn-lg" role="button" id="addContent" value="Add Content" /></p>
+    <textarea style="width:100%;height:400px;"
+              data-response-box>
+Response will load here after your request
+    </textarea>
+</form>
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
+<form data-simple-form data-endpoint="/content/types"
+     class="jumbotron">
     <h3>Add Content Type</h3>
-    Content Type Name:
-    <input type="text" name="content_name"/>
-    <p><a href="#" class="btn btn-primary btn-lg" role="button" id="addContentType">Add Content Type &raquo;</a></p>
-    <textarea id="response_addContentType" style="width:100%;height:400px;">All content types will load here after you finish your request.</textarea>
-</div>
+    <div class="form-group">
+        <label class="control-label">Content Type Name:</label>
+        <input type="text" name="content_name" class="form-control" data-key="contentTypeName" value="content_type_test" />
+    </div>
+    <p><input type="submit" class="btn btn-primary btn-lg" role="button" value="Add Content Type" /></p>
+    <textarea style="width:100%;height:400px;"
+              data-response-box>
+Response will load here after your request
+    </textarea>
+</form>
 
 </div> <!-- /container -->
 
@@ -108,6 +137,23 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/docs.min.js"></script>
+
+<script src="js/handlebars-v4.0.2.js"></script>
+
+
+<!-- services -->
+<script src="js/curation/req.js"></script>
+<script src="js/curation/auth.js"></script>
+<script src="js/curation/utils.js"></script>
+
+<!-- modules -->
+<script src="js/curation/notifications.js"></script>
+<script src="js/curation/video-overview.js"></script>
+<script src="js/curation/simple-form-helper.js"></script>
+
+<!-- global init -->
+<script src="js/curation/init.js"></script>
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 </body>

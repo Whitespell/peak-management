@@ -4,6 +4,8 @@
 
 		init: function(){
 			this._$overviewEl = $('[data-video-overview]');
+			if(!this._$overviewEl[0]) return;
+			
 			this._$navEl = $('[data-video-overview-nav]');
 			this._currOffset = 0;
 			this._videos = {};
