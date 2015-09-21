@@ -128,6 +128,16 @@
 				dfd = jQuery.Deferred(),
 				selectedBundleId;
 
+			var doAdd = function(){
+				//add to bundle
+				WS.curation.req.post('https://peakapi.whitespell.com/content/'+selectedBundleId+'/add_child', {
+					childId: itemId
+				});
+
+				dfd.resolve(selectedBundleId);
+				self._bundlesModal.$el.modal('hide');
+			};
+
 			//show modal
 			this._bundlesModal.$el.modal('show');
 
@@ -140,13 +150,20 @@
 
 			//catch save
 			this._bundlesModal.$el.find('[data-item-approve-save]').on('click', function(){
-				//add to bundle
-				WS.curation.req.post('https://peakapi.whitespell.com/content/'+selectedBundleId+'/add_child', {
-					childId: itemId
-				});
-
-				dfd.resolve(selectedBundleId);
-				self._bundlesModal.$el.modal('hide');
+				//create new bundle first?
+				var newBundleName = $('#new-bundle-name-input').val();
+				if(newBundleName !== ''){
+					WS.curation.req.post('https://peakapi.whitespell.com/users/'+WS.curation.auth.getUser().userId+'/content', {
+						contentType: 6,
+						categoryId: self._categoryId,
+						contentTitle: newBundleName,
+						contentUrl: '',
+						contentDescription: '',
+						thumbnailUrl: '',
+					}).done(doAdd);
+				} else {
+					doAdd();
+				}
 			});
 
 			this._bundlesModal.$el.find('[data-item-approve-cancel]').on('click', function(){
